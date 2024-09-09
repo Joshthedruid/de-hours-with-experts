@@ -53,7 +53,11 @@ public class SecretRecipeDecoder {
      */
     public static String decodeString(String str) {
         // TODO: implement me
-        return "1 cup";
+        String return_string = "";
+        for(my_char in str){
+            return_string += ENCODING.get(my_char);
+        }
+        return return_string;
     }
 
     /**
@@ -63,10 +67,22 @@ public class SecretRecipeDecoder {
      */
     public static Ingredient decodeIngredient(String line) {
         // TODO: implement me
-        return new Ingredient("1 cup", "butter");
+        int split = line.indexOf("#");
+        return new Ingredient(decodeString(line.substring(0,split)), decodeString(line.substring(split+1,line.length())));
     }
 
     public static void main(String[] args) {
         // TODO: implement me
+        Scanner scanner = new Scanner(new File("secret_recipe.txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("decoded_recipe.txt"));
+
+		while (scanner.hasNextLine()) {
+            new Ingredient nextIng = decodeIngredient(scanner.nextLine());
+			writer.write(nextIng.getAmount + " " + nextIng.getDescription);
+            writer.newLine();
+		}
+
+		scanner.close();
+        writer.close();
     }
 }
